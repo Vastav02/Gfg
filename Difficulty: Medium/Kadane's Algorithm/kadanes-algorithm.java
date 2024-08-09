@@ -44,7 +44,7 @@ class Solution {
     long maxSubarraySum(int[] arr) {
         
         // Your code here
-         int sum=0;
+        int sum=0;
         int res=arr[0];
         for(int i=0;i<arr.length;i++) 
         {
