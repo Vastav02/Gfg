@@ -1,58 +1,46 @@
 //{ Driver Code Starts
 import java.util.*;
 
-class WildcardPattern
-{
-	public static void main(String args[])
-	{
-		Scanner sc = new Scanner(System.in);
-		int t = sc.nextInt();
-		sc.nextLine();
-		while(t>0)
-		{
-			String pat = sc.nextLine();
-			String text = sc.nextLine();
-			Solution g = new Solution();
-			System.out.println(g.wildCard(pat,text));
-			t--;
-		}
-	}
+class WildcardPattern {
+    public static void main(String args[]) {
+        Scanner sc = new Scanner(System.in);
+        int t = sc.nextInt();
+        sc.nextLine();
+        while (t > 0) {
+            String pat = sc.nextLine();
+            String text = sc.nextLine();
+            Solution g = new Solution();
+            System.out.println(g.wildCard(pat, text));
+            t--;
+        }
+    }
 }
 // } Driver Code Ends
 
 
-class Solution
-{
-    int wildCard(String pattern, String str)
-    {
-        // Your code goes here
-        int n = str.length();
-        int m =pattern.length();
-        int dp[][] = new int[n+1][m+1];
-        //initialization
-        dp[0][0] =1;
-        //p=" " -> (p is empty)
-        for(int i =1 ;i<n+1;i++){
-            dp[i][0] = 0;
-        }
-        //s=" " -> (s is empty)
-        for(int j =1;j<m+1;j++){
-            if(pattern.charAt(j-1)=='*'){
-                dp[0][j] = dp[0][j-1];
+class Solution {
+    public int wildCard(String ptr, String str) {
+        ptr="$"+ptr;
+        str="$"+str;
+        
+        Boolean dp[][]=new Boolean[ptr.length()+1][str.length()+1];
+        
+        dp[0][0]=true;
+        for(int i=1;i<dp.length;i++)dp[i][0]=false;
+        for(int j=1;j<dp[0].length;j++)dp[0][j]=false;
+        
+        
+        for(int i=1;i<dp.length;i++){
+            for(int j=1;j<dp[0].length;j++){
+                    if(str.charAt(j-1)==ptr.charAt(i-1) || ptr.charAt(i-1)=='?'){
+                         dp[i][j]= dp[i-1][j-1]; 
+                    }else if(ptr.charAt(i-1)=='*'){
+                        dp[i][j]=dp[i][j-1] || dp[i-1][j];
+                    }else {
+                        dp[i][j]=false;
+                    }
             }
         }
-        //bottom up 
-        for(int i =1;i<n+1;i++){
-            for(int j =1;j<m+1;j++){
-                if(str.charAt(i-1)==pattern.charAt(j-1)||pattern.charAt(j-1)=='?'){
-                    dp[i][j] = dp[i-1][j-1];
-                }else if(pattern.charAt(j-1)=='*'){
-                    dp[i][j] = Math.max(dp[i-1][j],dp[i][j-1]);
-                }else{
-                    dp[i][j]=0;
-                }
-            }
-        }
-        return dp[n][m];
+        return dp[dp.length-1][dp[0].length-1]==true?1:0;
     }
 }
